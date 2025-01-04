@@ -1,0 +1,149 @@
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Analisis comentarios</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+				background-color: #f3f4f6; /* Un color claro para el fondo */
+			}
+			h1 {
+				font-size: 2.5rem;
+				color: #333;
+				margin-bottom: 20px;
+				text-align: center;
+			}
+			.group-members {
+				align-self: flex-start; /* Alineado a la izquierda */
+				margin-left: 20px;
+				margin-bottom: 20px;
+				color: #555;
+			}
+			.comment-box {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: 100%;
+				max-width: 400px;
+			}
+			textarea {
+				width: 100%;
+				height: 100px;
+				margin-bottom: 10px;
+				padding: 10px;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				font-size: 1rem;
+			}
+			button {
+				padding: 10px 20px;
+				background-color: #4caf50;
+				color: white;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				font-size: 1rem;
+			}
+			button:hover {
+				background-color: #45a049;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Título centrado -->
+		<h2>Proyecto grupal de Big Data</h2>
+		<h2>
+			Análisis de sentimientos en comentarios de películas (IMDB) usando
+			RNN (LSTM)
+		</h2>
+
+		<!-- Lista de integrantes alineada a la izquierda -->
+		<div class="group-members">
+			<p>Integrantes:</p>
+			<ul>
+				<li>De la Cruz Brayan</li>
+				<li>Echeverría Victor</li>
+				<li>Sandoval Alan</li>
+			</ul>
+		</div>
+
+		<!-- Cuadro de comentarios -->
+		<div class="comment-box">
+			<p id="result"></p>
+			<textarea id="comment" placeholder="Escribe tu comentario aquí..."
+			></textarea>
+			<button id="sendCommentButton">Enviar Comentario</button>
+		</div>
+
+		<script type="module">
+			async function sendComment() {
+				console.log("Mensaje enviado");
+				const commentInput = document.getElementById("comment");
+				const resultElement = document.getElementById("result");
+
+				// Validar el comentario
+				if (
+					!commentInput ||
+					!commentInput.value.trim()
+				) {
+					alert(
+						"Por favor, escribe un comentario antes de enviarlo.",
+					);
+					return;
+				}
+
+				const comment = commentInput.value.trim();
+
+				try {
+					// URL del endpoint de la API (reemplázala con la URL correcta)
+					const apiUrl = "https://tu-api.azure.com/endpoint";
+
+					// Hacer la solicitud a la API
+					const response = await fetch(apiUrl, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							"Ocp-Apim-Subscription-Key": "TU-CLAVE-API", // Reemplaza con la clave API
+						},
+						body: JSON.stringify({ comment }), // Enviamos el comentario como JSON
+					});
+
+					// Manejar la respuesta de la API
+					if (!response.ok) {
+						throw new Error("Error al comunicarse con la API");
+					}
+
+					const data = await response.json();
+
+					// Interpretar el resultado
+					const sentiment = data.sentiment; // 0 o 1 según la API
+					if (sentiment === 1) {
+						resultElement.textContent =
+							"El comentario es positivo.";
+					} else if (sentiment === 0) {
+						resultElement.textContent =
+							"El comentario es negativo.";
+					} else {
+						resultElement.textContent =
+							"No se pudo determinar el sentimiento del comentario.";
+					}
+				} catch (error) {
+					console.error("Error al analizar el comentario:", error);
+					alert(
+						"Hubo un problema al enviar el comentario. Inténtalo de nuevo.",
+					);
+				}
+			}
+
+			document.getElementById("sendCommentButton").addEventListener("click", sendComment)
+		</script>
+	</body>
+</html>
