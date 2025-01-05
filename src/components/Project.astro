@@ -53,14 +53,15 @@ import background from '../assets/bg.jpg';
 
         try {
             // URL del endpoint de la API (reemplázala con la URL correcta)
-            const apiUrl = "https://tu-api.azure.com/endpoint";
+            const apiUrl = "https://analisis-sentimientos-d5bbfphqccd4g3b3.eastus-01.azurewebsites.net/predict_api";
+            //const apiUrl = "http://8b23ca8d-f4ec-4e09-9bd0-cd1b056a9816.eastus.azurecontainer.io";
 
             // Hacer la solicitud a la API
             const response = await fetch(apiUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Ocp-Apim-Subscription-Key": "TU-CLAVE-API", // Reemplaza con la clave API
+                    //"Ocp-Apim-Subscription-Key": "nooJBINpc7bnqHGVjyqlGXVhBBKA3sLj", // Reemplaza con la clave API
                 },
                 body: JSON.stringify({ comment }), // Enviamos el comentario como JSON
             });
@@ -72,10 +73,9 @@ import background from '../assets/bg.jpg';
                 throw new Error("Error al comunicarse con la API");
             }
 
-            const data = await response.json();
+            const data = await response.json(); //0 o 1 según la API
+            const sentiment = data.result;
 
-            // Interpretar el resultado
-            const sentiment = data.sentiment; // 0 o 1 según la API
             if (sentiment === 1) {
                 resultElement.textContent =
                     "El comentario es positivo.";
@@ -84,7 +84,7 @@ import background from '../assets/bg.jpg';
                     "El comentario es negativo.";
             } else {
                 resultElement.textContent =
-                    "No se pudo determinar el sentimiento del comentario.";
+                    "No se pudo determinar el sentimiento del comentario.\n" + sentiment;
             }
         } catch (error) {
             console.error("Error al analizar el comentario:", error);
