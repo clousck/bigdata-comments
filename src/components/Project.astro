@@ -52,16 +52,15 @@ import background from '../assets/bg.jpg';
         const comment = commentInput.value.trim();
 
         try {
+            resultElement.textContent = "Procesando...";
             // URL del endpoint de la API (reemplázala con la URL correcta)
-            const apiUrl = "https://analisis-sentimientos-d5bbfphqccd4g3b3.eastus-01.azurewebsites.net/predict_api";
-            //const apiUrl = "http://8b23ca8d-f4ec-4e09-9bd0-cd1b056a9816.eastus.azurecontainer.io";
+            const apiUrl = "https://analisis-sentimientos-d5bbfphqccd4g3b3.eastus-01.azurewebsites.net/predict_api_json";
 
             // Hacer la solicitud a la API
             const response = await fetch(apiUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    //"Ocp-Apim-Subscription-Key": "nooJBINpc7bnqHGVjyqlGXVhBBKA3sLj", // Reemplaza con la clave API
                 },
                 body: JSON.stringify({ comment }), // Enviamos el comentario como JSON
             });
